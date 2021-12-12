@@ -13,14 +13,57 @@ from utils import get_size, is_subscribed, temp
 import re
 logger = logging.getLogger(__name__)
 
+#help
+HPIC = "https://telegra.ph/file/f62975b78158b7c5b2468.jpg"
+
+HB = [[
+            InlineKeyboardButton('Manual Filter', callback_data='manuelfilter'),
+            InlineKeyboardButton('Auto Filter', callback_data='autofilter')
+            ],[
+            InlineKeyboardButton('Connection', callback_data='coct'),
+            InlineKeyboardButton('Extra Mods', callback_data='extra')
+            ],[
+            InlineKeyboardButton('🏠 Home', callback_data='start'),
+            InlineKeyboardButton('🔮 Status', callback_data='stats')
+        ]]
+
+@Client.on_message(filters.command("help"))
+async def help(client, message):
+    
+    #
+    
+    reply_markup = InlineKeyboardMarkup(HB)
+    await message.reply_photo(
+        photo=HPIC,
+        caption=script.HELP_TXT,
+        reply_markup=reply_markup,
+        parse_mode='html'
+    )
+    
+    
+    
+# ---------- End -------------#
+SB = [[
+            InlineKeyboardButton('➕ Aᴅᴅ Mᴇ Tᴏ Yᴏᴜʀ Gʀᴏᴜᴘ ➕', url=f'http://t.me/{temp.U_NAME}?startgroup=true')
+            ],[
+            InlineKeyboardButton('🔍 Sᴇᴀʀᴄʜ', switch_inline_query_current_chat=''),
+            InlineKeyboardButton('📢 Uᴘᴅᴀᴛᴇs', url='https://t.me/mytestbotz')
+            ],[
+            InlineKeyboardButton('⚙️ Hᴇʟᴘ', callback_data='help'),
+            InlineKeyboardButton('📝 BᴏᴛLɪsᴛs', url='https://t.me/mybotzlist')
+            ],[
+            InlineKeyboardButton('🤖 Aʙᴏᴜᴛ', callback_data='about'),
+            InlineKeyboardButton('⛔️ Cʟᴏsᴇ', callback_data='close_data')
+        ]]
+
 @Client.on_message(filters.command("start"))
 async def start(client, message):
     if message.chat.type in ['group', 'supergroup']:
         buttons = [
             [
-                InlineKeyboardButton('🤖 Updates', url='https://t.me/TeamEvamaria')
-            ],
-            [
+                InlineKeyboardButton('🤖 Updates', url='https://t.me/mytestbotz'),
+            #],
+           # [
                 InlineKeyboardButton('ℹ️ Help', url=f"https://t.me/{temp.U_NAME}?start=help"),
             ]
             ]
@@ -37,15 +80,15 @@ async def start(client, message):
         await client.send_message(LOG_CHANNEL, script.LOG_TEXT_P.format(message.from_user.id, message.from_user.mention))
     if len(message.command) != 2:
         buttons = [[
-            InlineKeyboardButton('➕ Add Me To Your Groups ➕', url=f'http://t.me/{temp.U_NAME}?startgroup=true')
+            InlineKeyboardButton('➕ Add Me To Your Groups ➕', url=f'http://t.me/siritgbot?startgroup=true')
             ],[
             InlineKeyboardButton('🔍 Search', switch_inline_query_current_chat=''),
-            InlineKeyboardButton('🤖 Updates', url='https://t.me/EvaMariaUpdates')
+            InlineKeyboardButton('🤖 Updates', url='https://t.me/mytestbotz')
             ],[
             InlineKeyboardButton('ℹ️ Help', callback_data='help'),
             InlineKeyboardButton('😊 About', callback_data='about')
         ]]
-        reply_markup = InlineKeyboardMarkup(buttons)
+        reply_markup = InlineKeyboardMarkup(SB)
         await message.reply_photo(
             photo=random.choice(PICS),
             caption=script.START_TXT.format(message.from_user.mention, temp.U_NAME, temp.B_NAME),
@@ -62,7 +105,7 @@ async def start(client, message):
         btn = [
             [
                 InlineKeyboardButton(
-                    "🤖 Join Updates Channel", url=invite_link.invite_link
+                    "Jᴏɪɴ Mʏ Uᴘᴅᴀᴛᴇ Cʜᴀɴɴᴇʟ", url=invite_link.invite_link
                 )
             ]
         ]
@@ -71,22 +114,22 @@ async def start(client, message):
             btn.append([InlineKeyboardButton(" 🔄 Try Again", callback_data=f"checksub#{message.command[1]}")])
         await client.send_message(
             chat_id=message.from_user.id,
-            text="**Please Join My Updates Channel to use this Bot!**",
+            text="**Please Join My Updates Channel to use this Bot!** \n __You don't need to Pay Anything, 100% Free to Join__",
             reply_markup=InlineKeyboardMarkup(btn),
             parse_mode="markdown"
             )
         return
-    if len(message.command) ==2 and message.command[1] in ["subscribe", "error", "okay", "help"]:
+    if len(message.command) ==2 and message.command[1] in ["subscribe", "error", "okay", "help2"]:
         buttons = [[
-            InlineKeyboardButton('➕ Add Me To Your Groups ➕', url=f'http://t.me/{temp.U_NAME}?startgroup=true')
+            InlineKeyboardButton('➕ Add Me To Your Groups ➕', url=f'http://t.me/siritgbot?startgroup=true')
             ],[
             InlineKeyboardButton('🔍 Search', switch_inline_query_current_chat=''),
-            InlineKeyboardButton('🤖 Updates', url='https://t.me/TeamEvamaria')
+            InlineKeyboardButton('🤖 Updates', url='https://t.me/mytestbotz')
             ],[
             InlineKeyboardButton('ℹ️ Help', callback_data='help'),
             InlineKeyboardButton('😊 About', callback_data='about')
         ]]
-        reply_markup = InlineKeyboardMarkup(buttons)
+        reply_markup = InlineKeyboardMarkup(SB)
         await message.reply_photo(
             photo=random.choice(PICS),
             caption=script.START_TXT.format(message.from_user.mention, temp.U_NAME, temp.B_NAME),
@@ -94,6 +137,18 @@ async def start(client, message):
             parse_mode='html'
         )
         return
+    
+    if len(message.command) ==2 and message.command[1] in ["help"]:
+        reply_markup = InlineKeyboardMarkup(HB)
+        await message.reply_photo(
+            photo=HPIC,
+            caption=script.HELP_TXT,
+            reply_markup=reply_markup,
+            parse_mode='html'
+        )
+        return
+    
+    
     file_id = message.command[1]
     files_ = await get_file_details(file_id)
     if not files_:
@@ -212,12 +267,12 @@ async def delete_all_index(bot, message):
             [
                 [
                     InlineKeyboardButton(
-                        text="YES", callback_data="autofilter_delete"
+                        text="✅ YES", callback_data="autofilter_delete"
                     )
                 ],
                 [
                     InlineKeyboardButton(
-                        text="CANCEL", callback_data="close_data"
+                        text="❎ CANCEL", callback_data="close_data"
                     )
                 ],
             ]
@@ -231,4 +286,3 @@ async def delete_all_index_confirm(bot, message):
     await Media.collection.drop()
     await message.answer()
     await message.message.edit('Succesfully Deleted All The Indexed Files.')
-
